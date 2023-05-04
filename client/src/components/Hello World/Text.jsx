@@ -2,10 +2,11 @@ import useEth from "../../contexts/EthContext/useEth";
 
 function Text({ setValue }) {
 
-    const { state: { contract} } = useEth();
+    const { state: { contract, accounts } } = useEth();
     const read = async () => {
-        const value = await contract.methods.getHi().call();
+        const value = await contract.methods.getHi().call({ from: accounts[0] });
         setValue(value);
+        console.log(value);
       };
     return (
         <>
