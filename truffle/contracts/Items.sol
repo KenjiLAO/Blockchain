@@ -24,6 +24,7 @@ contract Items {
         firstClicked = false;
     }
 
+    //Generate data
     function firstAddToShop() public returns (string memory) {
         if (firstClicked == false) {
             shop.push(Shop("golden armor",200));
@@ -33,6 +34,7 @@ contract Items {
             shop.push(Shop("bow",25));
             shop.push(Shop("arrows (25)",25));
             shop.push(Shop("shield",500));
+            //Set firstClicked to true to stop generating data
             firstClicked = true;
             return "Shop reseted";
         }
@@ -41,52 +43,63 @@ contract Items {
         }
     }
 
+    //Generate data to bag
     function addBagItem() public returns (string memory) {
         bags.push(Bag("None",25));
         return "Shop reseted";
     }
 
+    //View the shop content
     function viewShop() public view returns(Shop[] memory) {
         return shop;
     }
 
+    //Buy items
     function buyItem(string memory name) public returns(string memory) {
         for (uint i = 0; i < shop.length; i++) {
 
+            //Check if user has enough money to pay
             if (money >= shop[i].value) {
                 if (keccak256(abi.encode(shop[i].item)) == keccak256(abi.encode(name))) {
+
                     //Retire money to pay
                     money = money - shop[i].value;
-                    //Delete item from shop
-                    shop.pop(); //To dev
-                    //Add item to bag
-                    bags.push(); //To dev
 
+                    //Add item to bag
+                    bags.push(Bag(shop[i].item,shop[i].value));
+
+                    //Delete item from shop
+                    shop[i] = shop[shop.length - 1];
+                    shop.pop();
                     return "Your article has been bought";
                 }
             } else {
                 return "No enough money";
             }
-            
         }
-        return "None article has been found"; // Value has been found
+        return "None article has been found";
     }
 
+    //See bag content
     function getBag() public view returns(Bag[] memory) {
         return bags;
     }
 
+    //Get money
     function getMoney() public view returns(uint256) {
         return money;
     }
 
+    //Sell everything on the bag
     function sellBag() public returns(Bag[] memory) {
 
+        //Get money for each items in the bag
         for (uint i = 0; i < bags.length; i++) {
             uint[] memory moneys = new uint[](bags.length);
             moneys[i] = bags[i].value;
             money = money + moneys[i];
         }
+        //Transfert all items to shop
         while(bags.length > 0) {
             bags.pop();
         }
