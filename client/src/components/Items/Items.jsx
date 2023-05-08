@@ -12,7 +12,7 @@ function Items() {
     return (
         <>
         <Text value={bagValue}/>
-        <ItemsBtnBag setBagValue={setBagValue}/>
+        <ItemsBtnBag setValue={setBagValue}/>
         <Text value={moneyValue}/>
         <ItemsBtnMoney setMoneyValue={setMoneyValue}/>
         <Text value={shopValue}/>
